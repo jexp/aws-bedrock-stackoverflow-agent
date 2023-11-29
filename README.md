@@ -1,7 +1,3 @@
-sls invoke local -f ask -d '{"queryParameters": {"question":"What is the capital of Sweden?"}}' --aws-profile default
-
-# https://mermade.github.io/openapi-gui/#
-
 I have a question about neo4j - how do I expand nodes in cypher?
 
 <!--
@@ -108,3 +104,16 @@ serverless plugin install -n serverless-python-requirements
 ```
 
 Running the above will automatically add `serverless-python-requirements` to `plugins` section in your `serverless.yml` file and add it as a `devDependency` to `package.json` file. The `package.json` file will be automatically created if it doesn't exist beforehand. Now you will be able to add your dependencies to `requirements.txt` file (`Pipfile` and `pyproject.toml` is also supported but requires additional configuration) and they will be automatically injected to Lambda package during build process. For more details about the plugin's configuration, please refer to [official documentation](https://github.com/UnitedIncome/serverless-python-requirements).
+
+
+### Links
+
+* [Bedrock Agent](https://us-east-1.console.aws.amazon.com/bedrock/home?region=us-east-1#/agents/501UOYAZPN/trace)
+* [Lambda](https://us-east-1.console.aws.amazon.com/lambda/home?region=us-east-1#/functions/aws-bedrock-stackoverflow-agent-prod-so_questions?tab=code)
+* [OpenAPI GUI](https://mermade.github.io/openapi-gui/#)
+* https://docs.aws.amazon.com/bedrock/latest/userguide/agents.html
+* https://docs.aws.amazon.com/bedrock/latest/userguide/agents-create.html
+* https://docs.aws.amazon.com/bedrock/latest/userguide/agents-lambda.html
+* https://docs.aws.amazon.com/bedrock/latest/userguide/agents-permissions.html#agents-permissions-lambda
+* https://docs.aws.amazon.com/lambda/latest/dg/access-control-resource-based.html
+* 
