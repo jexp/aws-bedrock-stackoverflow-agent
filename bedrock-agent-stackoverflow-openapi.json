@@ -1,0 +1,73 @@
+{
+    "openapi": "3.0.0",
+    "servers": [
+        {
+            "url": ""
+        }
+    ],
+    "info": {
+        "description": "A Bedrock Agent to return Questions and Answers from a Developer Q&A Database",
+        "version": "1.0.0",
+        "title": "Stackoverflow Bedrock Agent",
+        "termsOfService": "",
+        "contact": {
+            "email": "michael.hunger@neo4j.com"
+        },
+        "license": {
+            "name": "Apache 2.0",
+            "url": ""
+        }
+    },
+    "tags": [],
+    "paths": {
+        "/questions": {
+            "summary": "Get top Questions and Answers from database by Tag and Search String",
+            "description": "Get top Questions and Answers texts for developer questions from database by Tag and Search String",
+            "get": {
+                "summary": "Get top Questions and Answers from database by Tag and Search String",
+                "description": "Get top Questions and Answers texts for developer questions from database by Tag and Search String",
+                "parameters": [
+                    {
+                        "name": "search",
+                        "in": "query",
+                        "required": false,
+                        "schema": {
+                            "type": "string",
+                            "default": "expand"
+                        },
+                        "description": "Part of question to search for"
+                    },
+                    {
+                        "name": "tag",
+                        "in": "path",
+                        "required": true,
+                        "schema": {
+                            "type": "string",
+                            "default": "neo4j"
+                        },
+                        "description": "Stackoverflow tag to search for"
+                    }
+                ],
+                "operationId": "",
+                "responses": {
+                    "200": {
+                        "description": "List of questions and answers based on tag and search",
+                        "content": {
+                            "application/json": {
+                                "schema": {}
+                            }
+                        }
+                    }
+                }
+            }
+        }
+    },
+    "components": {
+        "schemas": {},
+        "requestBodies": {},
+        "securitySchemes": {},
+        "links": {},
+        "callbacks": {}
+    },
+    "security": []
+}

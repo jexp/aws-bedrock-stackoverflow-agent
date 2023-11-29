@@ -1,0 +1,50 @@
+service: aws-bedrock-stackoverflow-agent
+frameworkVersion: '3'
+
+provider:
+  name: aws
+  region: us-east-1
+  runtime: python3.11
+	
+resources:
+  Resources:
+    myDefaultRole:
+      Type: AWS::IAM::Role
+      Properties:
+#        Path: /questions/
+#        RoleName: AmazonBedrockExecutionRoleForAgents_VYYRM9TD94M
+        AssumeRolePolicyDocument:
+          Version: '2012-10-17'
+          Statement:
+            - Effect: Allow
+              Principal:
+                Service:
+                  - bedrock.amazonaws.com
+              Action:
+                - 'sts:AssumeRole'
+        Policies:
+          - PolicyName: aws-bedrock-stackoverflow-agent-prod-so_questions
+            PolicyDocument:
+              Version: '2012-10-17'
+              Statement:
+                - Effect: 'Allow'
+                  Action: 'lambda:InvokeFunction'
+                  Resource: 'arn:aws:lambda:us-east-1:715633473519:function:aws-bedrock-stackoverflow-agent-prod-so_questions'
+                  Condition:
+                    StringEquals:
+                      AWS:SourceAccount: '715633473519'
+                    ArnLike:
+                      AWS:SourceArn: 'arn:aws:bedrock:us-east-1:715633473519:agent/501UOYAZPN'
+
+functions:
+  so_questions:
+    handler: handler.so_questions
+    events:
+      - httpApi: 'GET /questions/{tag}'
+
+plugins:
+  - serverless-python-requirements
+
+custom:
+  pythonRequirements:
+    dockerizePip: true
