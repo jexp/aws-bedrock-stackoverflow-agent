@@ -1,0 +1,11 @@
+{
+  "name": "aws-bedrock-stackoverflow-agent",
+  "description": "",
+  "version": "1.0.0",
+  "private": true,
+  "license": "UNLICENSED",
+  "devDependencies": {
+    "serverless": "^3.38.0",
+    "serverless-python-requirements": "^6.0.0"
+  }
+}
