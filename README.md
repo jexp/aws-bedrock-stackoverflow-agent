@@ -26,20 +26,22 @@ This template does not include any kind of persistence (database). For more adva
 
 ### Deployment
 
-```
-$ serverless deploy
+```bash
+serverless deploy --aws-profile default --stage prod
 ```
 
 After deploying, you should see output similar to:
 
 ```bash
-Deploying aws-python-http-api-project to stage dev (us-east-1)
+Running "serverless" from node_modules
 
-✔ Service deployed to stack aws-python-http-api-project-dev (140s)
+Deploying aws-bedrock-stackoverflow-agent to stage prod (us-east-1)
 
-endpoint: GET - https://xxxxxxxxxx.execute-api.us-east-1.amazonaws.com/
+✔ Service deployed to stack aws-bedrock-stackoverflow-agent-prod (88s)
+
+endpoint: GET - https://926tifjrbe.execute-api.us-east-1.amazonaws.com/questions/{tag}
 functions:
-  hello: aws-python-http-api-project-dev-hello (2.3 kB)
+  so_questions: aws-bedrock-stackoverflow-agent-prod-so_questions (47 MB)
 ```
 
 _Note_: In current form, after deployment, your API is public and can be invoked by anyone. For production deployments, you might want to configure an authorizer. For details on how to do that, refer to [http event docs](https://www.serverless.com/framework/docs/providers/aws/events/apigateway/).
@@ -49,18 +51,13 @@ _Note_: In current form, after deployment, your API is public and can be invoked
 After successful deployment, you can call the created application via HTTP:
 
 ```bash
-curl https://xxxxxxx.execute-api.us-east-1.amazonaws.com/
+curl https://926tifjrbe.execute-api.us-east-1.amazonaws.com/questions/neo4j
 ```
 
-Which should result in response similar to the following (removed `input` content for brevity):
+Which should result in response similar to the following:
 
 ```json
-{
-  "message": "Go Serverless v3.0! Your function executed successfully!",
-  "input": {
-    ...
-  }
-}
+{"messageVersion": "1.0", "response": {"actionGroup": "", "apiPath": "", "httpMethod": "GET", "httpStatusCode": 200, "responseBody": {"application/json": {"body": "{\"inputs\": \"{\\\"inputText\\\": \\\"no input text\\\", \\\"params\\\": \\\"\\\", \\\"bodyParams\\\": \\\"\\\"}\", \"message\": \"Top 3 questions for tag neo4j related to expand:\\n\\n,title,q.body_markdown,q.link,answers\\n0,Limit Neo4j apoc.path.expand by relationship property value,\\\"Is it possible in a weighted Neo4j graph to find all paths within n hops of a given node with the constraints that only the top m relationships (by weight) from each node are returned/further expanded? \\r\\n\\r\\nFor example, given the following graph:\\r\\n\\r\\n[![enter image description here][1]][1]\\r\\n\\r\\n\\r\\n  [1]: https://i.stack.imgur.com/N50IT.png\\r\\n\\r\\nThis query...
 ```
 
 ### Local development
@@ -68,16 +65,22 @@ Which should result in response similar to the following (removed `input` conten
 You can invoke your function locally by using the following command:
 
 ```bash
-serverless invoke local --function hello
+sls invoke local -f so_questions --path test2.json
 ```
 
 Which should result in response similar to the following:
 
 ```
 {
-  "statusCode": 200,
-  "body": "{\n  \"message\": \"Go Serverless v3.0! Your function executed successfully!\",\n  \"input\": \"\"\n}"
-}
+    "messageVersion": "1.0",
+    "response": {
+        "actionGroup": "",
+        "apiPath": "",
+        "httpMethod": "GET",
+        "httpStatusCode": 200,
+        "responseBody": {
+            "application/json": {
+                "body": "{\"inputs\": \"{\\\"inputText\\\": \\\"no input text\\\", \\\"params\\\": \\\"\\\", \\\"bodyParams\\\": \\\"\\\"}\", \"message\": \"Top 3 questions for tag neo4j related to 
 ```
 
 Alternatively, it is also possible to emulate API Gateway and Lambda locally by using `serverless-offline` plugin. In order to do that, execute the following command:
