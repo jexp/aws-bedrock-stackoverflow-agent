@@ -1,8 +1,14 @@
 import json
-from neo4j import GraphDatabase
 import os
 import pandas as pd
 
+from neo4j import GraphDatabase
+from aws_lambda_powertools.logging.logger import Logger
+
+logger = Logger()
+
+
+@logger.inject_lambda_context
 def so_questions(event, context):
     inputText = event.get('inputText','no input text')
     params = ",".join([str(p['name']) + ":" + str(p['value']) for p in event.get('parameters',[])])
@@ -55,5 +61,7 @@ def so_questions(event, context):
             }
         }
     }
-    return response    
+
+    logger.info('Response: {0}'.format(response))
+    return response
 

@@ -5,6 +5,8 @@ provider:
   name: aws
   region: us-east-1
   runtime: python3.11
+  environment:
+    POWERTOOLS_LOGGER_LOG_EVENT: true
   iam:
     role:
       statements:
@@ -13,14 +15,22 @@ provider:
             - 'bedrock:ListFoundationModels'
             - 'bedrock:InvokeModel'
           Resource: '*'
-	
+
 resources:
   Resources:
+    BedrockInvokePermission:
+      Type: AWS::Lambda::Permission
+      Properties:
+        FunctionName: !GetAtt SoUnderscorequestionsLambdaFunction.Arn
+        Action: lambda:InvokeFunction
+        Principal: bedrock.amazonaws.com
+        SourceAccount: '715633473519'
+        SourceArn: 'arn:aws:bedrock:us-east-1:715633473519:agent/501UOYAZPN'
+
     myDefaultRole:
       Type: AWS::IAM::Role
       Properties:
-#        Path: /questions/
-#        RoleName: AmazonBedrockExecutionRoleForAgents_VYYRM9TD94M
+        RoleName: AmazonBedrockExecutionRoleForAgents_SOQuestions
         AssumeRolePolicyDocument:
           Version: '2012-10-17'
           Statement:
@@ -31,18 +41,23 @@ resources:
               Action:
                 - 'sts:AssumeRole'
         Policies:
-          - PolicyName: aws-bedrock-stackoverflow-agent-prod-so_questions
+          - PolicyName: AmazonBedrockAgentBedrockFoundationModelPolicyProd
             PolicyDocument:
               Version: '2012-10-17'
               Statement:
                 - Effect: 'Allow'
-                  Action: 'lambda:InvokeFunction'
-                  Resource: !GetAtt SoUnderscorequestionsLambdaFunction.Arn
+                  Action: 'bedrock:InvokeModel'
+                  Resource: 'arn:aws:bedrock:us-east-1::foundation-model/anthropic.claude-v2'
+          - PolicyName: AmazonBedrockAgentS3Policy_D3A6SOR87IB
+            PolicyDocument:
+              Version: '2012-10-17'
+              Statement:
+                - Effect: 'Allow'
+                  Action: 's3:GetObject'
+                  Resource: 'arn:aws:s3:::data.neo4j.com/bedrock-agent-stackoverflow-openapi.json'
                   Condition:
                     StringEquals:
                       AWS:SourceAccount: '715633473519'
-                    ArnLike:
-                      AWS:SourceArn: 'arn:aws:bedrock:us-east-1:715633473519:agent/501UOYAZPN'
 
 functions:
   so_questions:
