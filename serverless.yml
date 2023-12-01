@@ -24,8 +24,9 @@ resources:
         FunctionName: !GetAtt SoUnderscorequestionsLambdaFunction.Arn
         Action: lambda:InvokeFunction
         Principal: bedrock.amazonaws.com
-        SourceAccount: '715633473519'
-        SourceArn: 'arn:aws:bedrock:us-east-1:715633473519:agent/501UOYAZPN'
+        SourceAccount: !Ref AWS::AccountId
+        SourceArn:
+          Fn::Sub: 'arn:aws:bedrock:${AWS::Region}:${AWS::AccountId}:agent/501UOYAZPN'
 
     myDefaultRole:
       Type: AWS::IAM::Role
@@ -47,7 +48,8 @@ resources:
               Statement:
                 - Effect: 'Allow'
                   Action: 'bedrock:InvokeModel'
-                  Resource: 'arn:aws:bedrock:us-east-1::foundation-model/anthropic.claude-v2'
+                  Resource:
+                    Fn::Sub: 'arn:aws:bedrock:${AWS::Region}::foundation-model/anthropic.claude-v2'
           - PolicyName: AmazonBedrockAgentS3Policy_D3A6SOR87IB
             PolicyDocument:
               Version: '2012-10-17'
@@ -57,7 +59,7 @@ resources:
                   Resource: 'arn:aws:s3:::data.neo4j.com/bedrock-agent-stackoverflow-openapi.json'
                   Condition:
                     StringEquals:
-                      AWS:SourceAccount: '715633473519'
+                      AWS:SourceAccount: !Ref AWS::AccountId
 
 functions:
   so_questions:
